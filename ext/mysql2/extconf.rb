@@ -69,6 +69,8 @@ elsif mc = (with_config('mysql-config') || Dir[GLOB].first)
   exit 1 if $? != 0
   $INCFLAGS += ' ' + includes
   $libs = libs + " " + $libs
+  # Ensure libmysqlclient is explicitly linked
+  $libs = "-lmysqlclient " + $libs unless $libs.include?('-lmysqlclient')
   rpath_dir = libs
 else
   inc, lib = dir_config('mysql', '/usr/local')
