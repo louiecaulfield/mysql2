@@ -68,13 +68,14 @@ elsif mc = (with_config('mysql-config') || Dir[GLOB].first)
   end
   exit 1 if $? != 0
   $INCFLAGS += ' ' + includes
-  $libs = libs + " " + $libs
   rpath_dir = libs
 
-  # Extract library path and ensure libmysqlclient is linked
+  # Extract library path - mysql_config may be broken and not include library name
   if libdir = libs[%r{-L(/[^ ]+)}, 1]
     $LDFLAGS << " -L#{libdir} -Wl,-rpath,#{libdir}"
-    have_library('mysqlclient') || abort("Cannot find libmysqlclient")
+    # Force link to mysqlclient since mysql_config --libs may be broken
+    $libs = "-L#{libdir} -lmysqlclient " + $libs
+    warn "-----\nForcing link to libmysqlclient in #{libdir}\n-----"
   end
 else
   inc, lib = dir_config('mysql', '/usr/local')
