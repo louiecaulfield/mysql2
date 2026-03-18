@@ -10,6 +10,7 @@
 #include <unistd.h>
 #endif
 #include <fcntl.h>
+#include <stdbool.h>
 #include "wait_for_single_fd.h"
 
 #include "mysql_enc_name_to_ruby.h"
